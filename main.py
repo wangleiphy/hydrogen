@@ -35,9 +35,10 @@ def closure(x):
 def plotpsi(x):
     alpha = np.exp(x)
     rmesh = np.linspace(0, 10, 101)
-    psi = np.sum(np.exp(-alpha[:, None]*rmesh), axis=0)
+    psi = np.exp(-alpha[:, None]*rmesh)
     plt.cla()
-    plt.plot(rmesh, psi)
+    for i in range(len(x)): # plot basis functions, its coefs are in the generalize eigh solver
+        plt.plot(rmesh, psi[i])
     plt.xlabel('$r$')
     plt.ylabel('$\psi$')
     plt.draw()
