@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 
 def generalize_eigh(H, S):
     '''
-    H v = w S v 
+    H v = S v w
+    where U^{T} S U = I
     '''
     s, u = np.linalg.eigh(S)
-    V = np.dot(u, np.diag(1/np.sqrt(s)))
-    w, v = np.linalg.eigh(np.dot(np.dot(V.transpose(), H), V))
+    U = np.dot(u, np.diag(1/np.sqrt(s)))
+    w, v = np.linalg.eigh(np.dot(np.dot(U.transpose(), H), U))
     return w, v 
 
 def energy(params):
@@ -37,10 +38,14 @@ def plotpsi(x):
     psi = np.sum(np.exp(-alpha[:, None]*rmesh), axis=0)
     plt.cla()
     plt.plot(rmesh, psi)
+    plt.xlabel('$r$')
+    plt.ylabel('$\psi$')
     plt.draw()
     plt.pause(0.05)
 
 if __name__=='__main__':
+    np.random.seed(42)
+
     N = 4 # number of basis
-    x0 = np.random.rand(N)
+    x0 = np.random.randn(N)
     res = minimize(closure, x0, method='L-BFGS-B', jac=True, callback=plotpsi, options={'gtol': 1e-07, 'disp':True})
